@@ -14,4 +14,11 @@ scores <- melt(np_scores,
                       "p1_rev_len",
                       "p2_rev_len"))
 
-fwrite (scores, "output/025_pychopper/primer_match")
+scores[, norm_length := ifelse(grepl("^p1", variable),
+                           value,
+                           value)]
+
+score_stats <- scores[, as.list(summary(norm_length, digits = 1)),
+               by = .(variable, Classification)]
+
+fwrite (score_stats, "output/025_pychopper/primer_match")
